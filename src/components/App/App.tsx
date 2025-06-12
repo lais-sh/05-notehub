@@ -1,66 +1,64 @@
 import { useState } from "react";
+import { useQuery, keepPreviousData } from "@tanstack/react-query";
+import { useDebounce } from "use-debounce";
 import css from "./App.module.css";
+
 import SearchBox from "../SearchBox/SearchBox";
 import NoteList from "../NoteList/NoteList";
-import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { fetchNotes } from "../../services/noteService";
 import Pagination from "../Pagination/Pagination";
 import NoteModal from "../NoteModal/NoteModal";
 import NoteForm from "../NoteForm/NoteForm";
-import { useDebounce } from "use-debounce";
 import Loader from "../Loader/Loader";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
 
+import { fetchNotes } from "../../services/noteService";
+
 export default function App() {
-  const [inputValue, setInputValue] = useState<string>("");
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [page, setPage] = useState(1);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  //FETCHING & SEARCHING NOTES
-  const [debounseInputValue] = useDebounce(inputValue, 500);
+  const [debouncedSearch] = useDebounce(searchTerm, 500);
 
-  const notes = useQuery({
-    queryKey: ["notes", debounseInputValue, currentPage],
-    queryFn: () => fetchNotes(debounseInputValue, currentPage),
+  const {
+    data,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["notes", debouncedSearch, page],
+    queryFn: () => fetchNotes(debouncedSearch, page),
     placeholderData: keepPreviousData,
   });
 
-  const totalPages = notes.data?.totalPages ?? 0;
+  const handleModalClose = () => setIsModalOpen(false);
 
   return (
     <div className={css.app}>
-      {/* -------LOADER--------- */}
-
-      {notes.isLoading && <Loader />}
-
-      {/* -------HEADER ELEMENTS--------- */}
+      {isLoading && <Loader />}
 
       <header className={css.toolbar}>
-        <SearchBox value={inputValue} onSearch={setInputValue} />
-        {totalPages > 0 && (
-          <Pagination
-            totalPages={totalPages}
-            currentPage={currentPage}
-            onPageChange={setCurrentPage}
-          />
+        <SearchBox value={searchTerm} onSearch={setSearchTerm} />
+        {data && data.totalPages > 1 && (
+         <Pagination
+           totalPages={data.totalPages}
+           currentPage={page}
+           onPageChange={setPage}
+         />
         )}
+
         <button onClick={() => setIsModalOpen(true)} className={css.button}>
           Create note +
         </button>
       </header>
 
-      {/* -------NOTELIST--------- */}
+      {isError && <ErrorMessage />}
 
-      <NoteList notes={notes.data?.notes ?? []} />
-      {notes.isError && <ErrorMessage />}
-
-      {/* -------NOTE MODAL--------- */}
+      {data?.notes && <NoteList notes={data.notes} />}
 
       {isModalOpen && (
-        <NoteModal
-          onClose={() => setIsModalOpen(false)}
-          children={<NoteForm onClose={() => setIsModalOpen(false)} />}
-        />
+        <NoteModal onClose={handleModalClose}>
+          <NoteForm onClose={handleModalClose} />
+        </NoteModal>
       )}
     </div>
   );

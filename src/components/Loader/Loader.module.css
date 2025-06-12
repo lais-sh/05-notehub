@@ -1,7 +1,12 @@
-.loader {
+.loaderWrapper {
   position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(255, 255, 255, 0.7); /* напівпрозорий білий фон */
+  display: flex;
+  justify-content: center;
+  align-items: center;
   z-index: 9999;
 }
