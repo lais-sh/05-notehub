@@ -1,19 +1,24 @@
-// Доступні теги для нотаток
-export type Tag = "Work" | "Personal" | "Meeting" | "Shopping" | "Todo";
+export type NoteTag = 'Todo' | 'Work' | 'Personal' | 'Meeting' | 'Shopping';
 
-// Тип однієї нотатки, отриманої з сервера
 export interface Note {
-  id: number;
+  id: string;
   title: string;
   content: string;
+  tag: NoteTag;
   createdAt: string;
   updatedAt: string;
-  tag: Tag;
 }
 
-// Тип нової нотатки при створенні
 export interface NewNoteData {
   title: string;
   content: string;
-  tag: Tag;
+  tag: NoteTag;
+}
+
+export interface FetchNotesResponse {
+  results: Note[];
+  page: number;
+  perPage: number;
+  totalPages: number;
+  totalResults: number;
 }

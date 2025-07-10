@@ -1,57 +1,60 @@
-import axios from "axios";
-import type { Note, NewNoteData } from "../types/note";
+import axios from 'axios';
+import type { Note, NewNoteData, FetchNotesResponse } from '../types/note';
 
-//TYPES
-interface FetchNotesResponse {
-  notes: Note[];
-  totalPages: number;
+const API_URL = 'https://notehub-public.goit.study/api/notes';
+const AUTH_TOKEN = import.meta.env.VITE_NOTEHUB_TOKEN;
+
+console.log('🔐 Loaded token from .env:', AUTH_TOKEN);
+
+if (!AUTH_TOKEN) {
+  console.warn('⚠️ Missing environment token: VITE_NOTEHUB_TOKEN. Check your .env file and restart Vite!');
 }
 
-interface FetchNotesParams {
-  search?: string;
-  page?: number;
-  perPage?: number;
-}
-
-//TOKEN CHECK
-const NOTEHUB_TOKEN = import.meta.env.VITE_NOTEHUB_TOKEN;
-if (!NOTEHUB_TOKEN) {
-  throw new Error("TOKEN IS MISSING");
-}
-
-//AXIOS DEFAULTS
-const axiosInstance = axios.create({
-  baseURL: "https://notehub-public.goit.study/api",
+const config = {
   headers: {
-    Authorization: `Bearer ${NOTEHUB_TOKEN}`,
+    Authorization: `Bearer ${AUTH_TOKEN}`,
+    'Content-Type': 'application/json',
   },
-});
+};
 
-//GET
-export async function fetchNotes(
-  query: string,
-  page: number
-): Promise<FetchNotesResponse> {
-  const params: FetchNotesParams = {
-    ...(query.trim() !== "" && { search: query.trim() }),
-    page: page,
-    perPage: 12,
-  };
+export async function fetchNotes(params: {
+  page: number;
+  search?: string;
+  perPage?: number;
+}): Promise<FetchNotesResponse> {
+  const { page, search = '', perPage = 12 } = params;
 
-  const response = await axiosInstance.get<FetchNotesResponse>("/notes", {
-    params,
-  });
-  return response.data;
+  try {
+    const response = await axios.get<FetchNotesResponse>(API_URL, {
+      headers: config.headers,
+      params: { page, perPage, ...(search && { search }) },
+    });
+    console.log('📥 Notes fetched:', response.data);
+    return response.data;
+  } catch (err: any) {
+    console.error('🚨 Failed to load notes:', err?.response?.data || err.message);
+    throw err;
+  }
 }
 
-//POST
-export async function createNote(newNote: NewNoteData) {
-  const response = await axiosInstance.post<Note>("/notes", newNote);
-  return response.data;
+export async function createNote(noteData: NewNoteData): Promise<Note> {
+  try {
+    const response = await axios.post<Note>(API_URL, noteData, config);
+    console.log('✅ Note created:', response.data);
+    return response.data;
+  } catch (err: any) {
+    console.error('🚨 Failed to create note:', err?.response?.data || err.message);
+    throw err;
+  }
 }
 
-//DELETE
-export async function deleteNote(noteId: number): Promise<Note> {
-  const response = await axiosInstance.delete<Note>(`/notes/${noteId}`);
-  return response.data;
+export async function deleteNote(noteId: string): Promise<Note> {
+  try {
+    const response = await axios.delete<Note>(`${API_URL}/${noteId}`, config);
+    console.log('🗑️ Note deleted:', response.data);
+    return response.data;
+  } catch (err: any) {
+    console.error('🚨 Failed to delete note:', err?.response?.data || err.message);
+    throw err;
+  }
 }

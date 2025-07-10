@@ -1,0 +1,71 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(20, 20, 20, 0.8);
+  display: grid;
+  place-items: center;
+  z-index: 9999;
+}
+
+.dialog {
+  background-color: #121212;
+  color: #f0f0f0;
+  border-radius: 12px;
+  max-width: 700px;
+  width: 92%;
+  overflow: hidden;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.5);
+  position: relative;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.poster {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  display: block;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.details {
+  padding: 24px;
+  line-height: 1.5;
+}
+
+.details h2 {
+  font-size: 26px;
+  margin-bottom: 14px;
+}
+
+.details p {
+  font-size: 15px;
+  margin-bottom: 10px;
+  color: #d0d0d0;
+}
+
+.close {
+  position: absolute;
+  top: 10px;
+  right: 14px;
+  background: none;
+  border: none;
+  font-size: 28px;
+  color: #f0f0f0;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.close:hover {
+  transform: rotate(90deg);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

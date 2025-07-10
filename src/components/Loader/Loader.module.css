@@ -1,12 +1,18 @@
-.loaderWrapper {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(255, 255, 255, 0.7); /* напівпрозорий білий фон */
+.text {
+  font-size: 17px;
+  text-align: center;
+  margin: 48px auto 0;
+  color: #6b7280;
+  max-width: 480px;
+  line-height: 1.5;
+  padding: 0 12px;
+  font-weight: 500;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 9999;
+  min-height: 200px;
 }
