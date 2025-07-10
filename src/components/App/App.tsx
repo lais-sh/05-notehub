@@ -8,7 +8,7 @@ import Modal from '../Modal/Modal';
 import NoteForm from '../NoteForm/NoteForm';
 import Loader from '../Common/Loader';
 import ErrorMessage from '../Common/ErrorMessage';
-import Pagination from '../../Pagination/Pagination';
+import Pagination from '../Pagination/Pagination';
 
 import { fetchNotes } from '../../services/noteService';
 import useDebounce from '../../hooks/useDebounce';
