@@ -34,7 +34,7 @@ export default function App() {
   });
 
   useEffect(() => {
-    if (Array.isArray(data?.results) && data.results.length === 0) {
+    if (Array.isArray(data?.notes) && data.notes.length === 0) {
       toast('No notes found.', { icon: '📝' });
     }
   }, [data]);
@@ -66,8 +66,8 @@ export default function App() {
       {isPending && <Loader />}
       {isError && <ErrorMessage />}
 
-      {Array.isArray(data?.results) && data.results.length > 0 && (
-        <NoteList notes={data.results} />
+      {Array.isArray(data?.notes) && data.notes.length > 0 && (
+        <NoteList notes={data.notes} />
       )}
 
       {isModalOpen && (

@@ -9,14 +9,15 @@ export interface Note {
   updatedAt: string;
 }
 
-export interface NewNoteData {
+export interface NewNote {
   title: string;
   content: string;
   tag: NoteTag;
 }
 
+export type NewNoteData = NewNote;
 export interface FetchNotesResponse {
-  results: Note[];
+  notes: Note[];
   page: number;
   perPage: number;
   totalPages: number;
