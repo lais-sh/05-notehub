@@ -31,11 +31,11 @@ export default function NoteList({ notes }: NoteListProps) {
           <div className={css.footer}>
             <span className={css.tag}>{tag}</span>
             <button
-              className={css.button}
-              onClick={() => mutate(id)}
-              type="button"
+             className={css.button}
+             onClick={() => mutate(id)}
+             type="button"
             >
-              Delete
+             Delete
             </button>
           </div>
         </li>

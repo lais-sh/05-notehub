@@ -49,7 +49,7 @@ export async function createNote(noteData: NewNoteData): Promise<Note> {
   }
 }
 
-export async function deleteNote(noteId: string): Promise<Note> {
+export async function deleteNote(noteId: number): Promise<Note> {
   try {
     const response = await axios.delete<Note>(`${API_URL}/${noteId}`, config);
     console.log('🗑️ Note deleted:', response.data);
